@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tricolor em Pauta — SPFC por dentro</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap');
+
+  :root{
+    --preto:#14110f;
+    --branco:#f7f4ee;
+    --vermelho:#c8102e;
+    --cinza:#8a8478;
+    --linha:#2a2521;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--preto);
+    color:var(--branco);
+    font-family:'Archivo',sans-serif;
+    line-height:1.5;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+
+  .faixa{
+    background:repeating-linear-gradient(135deg,var(--vermelho) 0 14px,var(--branco) 14px 28px,var(--preto) 28px 42px);
+    height:6px;
+  }
+
+  header{
+    padding:28px 24px 22px;
+    border-bottom:1px solid var(--linha);
+  }
+  .masthead{
+    max-width:1080px;
+    margin:0 auto;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .marca{
+    font-family:'Archivo Black',sans-serif;
+    font-size:clamp(28px,5vw,44px);
+    letter-spacing:-0.5px;
+  }
+  .marca span{color:var(--vermelho);}
+  .subtitulo{
+    color:var(--cinza);
+    font-size:14px;
+    max-width:280px;
+    text-align:right;
+  }
+
+  .ticker-wrap{
+    background:var(--vermelho);
+    overflow:hidden;
+    white-space:nowrap;
+    border-bottom:1px solid var(--linha);
+  }
+  .ticker{
+    display:inline-block;
+    padding:9px 0;
+    font-size:13px;
+    font-weight:600;
+    animation:rolar 32s linear infinite;
+  }
+  .ticker b{margin-right:10px;}
+  .ticker em{font-style:normal;opacity:.85;margin-right:40px;}
+  @keyframes rolar{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  @media (prefers-reduced-motion: reduce){.ticker{animation:none;}}
+
+  main{max-width:1080px;margin:0 auto;padding:36px 24px 60px;}
+
+  .destaque{
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:32px;
+    padding-bottom:34px;
+    border-bottom:1px solid var(--linha);
+    margin-bottom:34px;
+  }
+  @media (max-width:760px){.destaque{grid-template-columns:1fr;}}
+
+  .tag{
+    display:inline-block;
+    font-size:12px;
+    color:var(--vermelho);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .destaque h1{
+    font-family:'Archivo Black',sans-serif;
+    font-size:clamp(26px,4vw,38px);
+    line-height:1.12;
+    margin-bottom:14px;
+  }
+  .destaque p{color:#d8d3c8;font-size:16px;max-width:52ch;}
+  .meta{color:var(--cinza);font-size:13px;margin-top:14px;}
+
+  .lateral{border-left:1px solid var(--linha);padding-left:28px;}
+  @media (max-width:760px){.lateral{border-left:none;padding-left:0;border-top:1px solid var(--linha);padding-top:20px;}}
+  .lateral h2{font-size:14px;color:var(--cinza);font-weight:700;margin-bottom:14px;}
+  .item-lateral{padding:12px 0;border-bottom:1px solid var(--linha);}
+  .item-lateral:last-child{border-bottom:none;}
+  .item-lateral a{font-weight:600;font-size:15px;display:block;margin-bottom:4px;}
+  .item-lateral span{color:var(--cinza);font-size:12px;}
+
+  .secao-titulo{
+    font-family:'Archivo Black',sans-serif;
+    font-size:20px;
+    margin-bottom:20px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--vermelho);
+    display:inline-block;
+  }
+
+  .grade{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    margin-bottom:44px;
+  }
+  @media (max-width:760px){.grade{grid-template-columns:1fr;}}
+  .cartao h3{font-size:17px;font-weight:700;margin-bottom:8px;line-height:1.3;}
+  .cartao p{color:var(--cinza);font-size:14px;}
+  .cartao .meta{margin-top:8px;}
+
+  .bastidores{
+    background:#1c1815;
+    padding:26px;
+    margin-bottom:44px;
+  }
+  .bastidores ul{list-style:none;}
+  .bastidores li{
+    padding:11px 0;
+    border-bottom:1px solid var(--linha);
+    font-size:15px;
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .bastidores li:last-child{border-bottom:none;}
+  .bastidores li span{color:var(--cinza);font-size:12px;white-space:nowrap;}
+
+  .proximo-jogo{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--vermelho);
+    padding:22px 26px;
+    margin-bottom:44px;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .proximo-jogo div:first-child{font-family:'Archivo Black',sans-serif;font-size:19px;}
+  .proximo-jogo div:last-child{font-size:13px;opacity:.9;}
+
+  footer{
+    border-top:1px solid var(--linha);
+    padding:28px 24px;
+    color:var(--cinza);
+    font-size:12px;
+    text-align:center;
+  }
+  footer strong{color:var(--branco);}
+</style>
+</head>
+<body>
+
+<div class="faixa"></div>
+
+<header>
+  <div class="masthead">
+    <div class="marca">TRICOLOR<span>EM PAUTA</span></div>
+    <div class="subtitulo">Cobertura diária do São Paulo Futebol Clube — bastidores, elenco e Brasileirão</div>
+  </div>
+</header>
+
+<div class="ticker-wrap">
+  <div class="ticker">
+    <b>ÚLTIMA HORA</b><em>São Paulo negocia com o Novorizontino para evitar bloqueio no registro de novos atletas</em>
+    <b>BASTIDORES</b><em>Presidente do clube e chefe do Conselho marcam reunião</em>
+    <b>ELENCO</b><em>Bobadilla e Lucas Moura avançam em transição física no SuperCT</em>
+    <b>FEMININO</b><em>São Paulo elimina o Flamengo e garante vaga na final do Brasileirão Feminino</em>
+    <b>ÚLTIMA HORA</b><em>São Paulo negocia com o Novorizontino para evitar bloqueio no registro de novos atletas</em>
+    <b>BASTIDORES</b><em>Presidente do clube e chefe do Conselho marcam reunião</em>
+    <b>ELENCO</b><em>Bobadilla e Lucas Moura avançam em transição física no SuperCT</em>
+    <b>FEMININO</b><em>São Paulo elimina o Flamengo e garante vaga na final do Brasileirão Feminino</em>
+  </div>
+</div>
+
+<main>
+
+  <section class="destaque">
+    <div>
+      <span class="tag">PENDÊNCIA FINANCEIRA</span>
+      <h1>São Paulo corre contra o tempo para evitar transfer ban por dívida com o Novorizontino</h1>
+      <p>O clube tem até a próxima segunda-feira, dia 28, para quitar um débito relacionado à contratação do meia Djhordney e evitar um bloqueio no registro de novos jogadores. A diretoria já encaminhou uma proposta de acordo com o clube do interior para regularizar a pendência ainda nesta temporada.</p>
+      <div class="meta">Bastidores · atualizado nesta semana</div>
+    </div>
+    <div class="lateral">
+      <h2>NO SUPERCT</h2>
+      <div class="item-lateral">
+        <a href="#">Recuperação em dia: Bobadilla e Lucas Moura fazem transição no clube</a>
+        <span>Preparação para o clássico contra o Santos</span>
+      </div>
+      <div class="item-lateral">
+        <a href="#">Aurélio Buta recebe alta após cirurgia no joelho direito</a>
+        <span>Lateral segue em fase de recuperação</span>
+      </div>
+      <div class="item-lateral">
+        <a href="#">Domingos Duarte também é vista no CT após procedimento no joelho</a>
+        <span>Zaga soma desfalques na temporada</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="proximo-jogo">
+    <div>PRÓXIMO CLÁSSICO: SÃO PAULO x SANTOS</div>
+    <div>San-São movimenta a venda de ingressos no MorumBIS — confira detalhes na Fut TV do clube</div>
+  </div>
+
+  <h2 class="secao-titulo">Elenco e departamento de futebol</h2>
+  <div class="grade">
+    <div class="cartao">
+      <h3>Regra dos estrangeiros obriga São Paulo a repensar planejamento</h3>
+      <p>A mudança anunciada pela CBF no número de jogadores estrangeiros relacionados impacta diretamente o planejamento do elenco tricolor para o restante da temporada.</p>
+      <div class="meta">CBF · repercussão no clube</div>
+    </div>
+    <div class="cartao">
+      <h3>Calleri volta a balançar as redes e ganha força na artilharia</h3>
+      <p>Depois de um período sem marcar, o centroavante voltou a decidir em partida no Morumbi, reforçando a briga do time por uma vaga na Libertadores.</p>
+      <div class="meta">Em campo · artilharia 2026</div>
+    </div>
+    <div class="cartao">
+      <h3>Tolói surge como alternativa na zaga em meio a desfalques</h3>
+      <p>Com o departamento médico cheio, o comandante tricolor testa novas soluções defensivas para os próximos compromissos do time.</p>
+      <div class="meta">Escalação · zaga</div>
+    </div>
+  </div>
+
+  <div class="bastidores">
+    <h2 class="secao-titulo" style="border:none;padding:0;margin-bottom:16px;">Direto dos bastidores</h2>
+    <ul>
+      <li><a href="#">Djhordney pode ser opção para o clássico após avanço nas negociações com a CBF</a><span>reforço</span></li>
+      <li><a href="#">Volante prioriza recuperação no clube e abre mão de convocação para seleção</a><span>departamento médico</span></li>
+      <li><a href="#">Comissão técnica é criticada por atraso na estreia de jovens da base</a><span>categorias de base</span></li>
+      <li><a href="#">São Paulo participa de projeto conjunto com rival contra a violência nos estádios</a><span>institucional</span></li>
+    </ul>
+  </div>
+
+  <h2 class="secao-titulo">Futebol feminino</h2>
+  <div class="grade">
+    <div class="cartao">
+      <h3>Tricolor está na decisão do Brasileirão Feminino</h3>
+      <p>Depois de eliminar o Flamengo na semifinal, o time feminino do São Paulo garantiu vaga na grande final da competição nacional.</p>
+      <div class="meta">Brasileirão Feminino · final confirmada</div>
+    </div>
+    <div class="cartao">
+      <h3>São Paulo e Corinthians decidem o título nacional</h3>
+      <p>As datas do confronto direto entre as duas equipes paulistas pela taça já estão definidas pela organização da competição.</p>
+      <div class="meta">Decisão · Choque-Rei feminino</div>
+    </div>
+    <div class="cartao">
+      <h3>Base feminina também está em ritmo de decisão</h3>
+      <p>Categorias de base do clube seguem disputando o Campeonato Paulista, com resultados que alimentam o otimismo da torcida.</p>
+      <div class="meta">Categorias de base</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>Tricolor em Pauta</strong> — cobertura independente sobre o São Paulo Futebol Clube.</p>
+  <p>As informações aqui reunidas são um resumo editorial de notícias publicadas por veículos esportivos. Não é o canal oficial do clube.</p>
+  <p>Feito por <strong>Erick</strong>, torcedor tricolor.</p>
+</footer>
+
+</body>
+</html>
