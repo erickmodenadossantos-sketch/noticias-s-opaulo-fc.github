@@ -1,287 +1,281 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tricolor em Pauta — SPFC por dentro</title>
+<title>Erick — Tricolor, maker e aprendiz de robótica</title>
+<meta name="description" content="Site do Erick, 14 anos, torcedor apaixonado do São Paulo FC e aprendiz de eletrônica, robótica e cultura maker.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap');
+:root{--red:#d4122e;--ink:#1b1a1f;--paper:#fbfcfd;--grid:#dde5ee;--mute:#5d6470;--card:#fff;--line:#1b1a1f;
+--disp:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;--body:"IBM Plex Sans",system-ui,sans-serif;
+padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:400 1.05rem/1.6 var(--body);color:var(--ink);background:var(--paper);
+background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--disp);line-height:1;margin:0;font-weight:900;letter-spacing:.01em}
+h2{font-size:clamp(2.2rem,6vw,3.6rem);margin-bottom:6px}
+.lead{max-width:62ch;color:var(--mute);margin:0 0 28px}
+section{padding:56px 0 8px}
 
-  :root{
-    --preto:#14110f;
-    --branco:#f7f4ee;
-    --vermelho:#c8102e;
-    --cinza:#8a8478;
-    --linha:#2a2521;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{
-    background:var(--preto);
-    color:var(--branco);
-    font-family:'Archivo',sans-serif;
-    line-height:1.5;
-  }
-  a{color:inherit;text-decoration:none;}
-  img{max-width:100%;display:block;}
+/* ---------- INTRO: placa de substituição ---------- */
+#intro{position:fixed;inset:0;z-index:50;background:#0c0c10;display:grid;place-items:center;padding:20px;transition:transform .9s cubic-bezier(.7,0,.2,1)}
+#intro.gone{transform:translateY(-100%)}
+.board{width:min(560px,100%);background:#050507;border:6px solid #2a2a33;border-radius:10px;padding:22px 22px 26px;box-shadow:0 0 60px rgba(212,18,46,.25);text-align:center}
+.board small{display:block;font:600 .8rem var(--body);letter-spacing:.3em;color:#8d8d99}
+.row{display:grid;grid-template-columns:70px 1fr;gap:14px;align-items:center;margin-top:18px;text-align:left}
+.row b{font:900 clamp(2.4rem,9vw,3.6rem) var(--disp);color:#ff3b30;text-shadow:0 0 14px #ff3b30;text-align:center;border:2px solid #3a1a1e;border-radius:6px;padding:4px 0;min-height:1.3em}
+.row span{font:700 clamp(1.4rem,6vw,2.2rem) var(--disp);letter-spacing:.06em;color:#ff3b30;text-shadow:0 0 12px #ff3b30}
+.row.out b,.row.out span{color:#4a4a55;text-shadow:none}
+.arrow{font:900 1.6rem var(--disp);color:#ff3b30;margin:6px 0 -6px;opacity:0}
+.board.on .arrow{opacity:1;transition:opacity .4s .9s}
+#go{margin-top:26px;font:900 1.6rem var(--disp);letter-spacing:.06em;background:var(--red);color:#fff;border:0;border-radius:8px;padding:12px 28px;cursor:pointer}
+#go:hover{filter:brightness(1.15)}
+.board.on #go{display:none}
+.flick{animation:fl .12s steps(2) 14}
+@keyframes fl{50%{opacity:.25}}
 
-  .faixa{
-    background:repeating-linear-gradient(135deg,var(--vermelho) 0 14px,var(--branco) 14px 28px,var(--preto) 28px 42px);
-    height:6px;
-  }
+/* ---------- TOPO ---------- */
+header.top{border-bottom:3px solid var(--ink);background:var(--paper);position:sticky;top:0;z-index:20}
+.nav{display:flex;gap:6px 18px;align-items:center;justify-content:space-between;padding:10px 20px;max-width:1040px;margin:0 auto;flex-wrap:wrap}
+.logo{font:900 1.6rem var(--disp);text-decoration:none}
+.nav ul{list-style:none;display:flex;flex-wrap:wrap;gap:4px 16px;margin:0;padding:0;font-weight:500;font-size:.95rem}
+.nav a{text-decoration:none}.nav a:hover{color:var(--red)}
+.stripes{height:10px;background:linear-gradient(90deg,var(--red) 0 33.3%,#fff 0 66.6%,var(--ink) 0);border-bottom:2px solid var(--ink)}
 
-  header{
-    padding:28px 24px 22px;
-    border-bottom:1px solid var(--linha);
-  }
-  .masthead{
-    max-width:1080px;
-    margin:0 auto;
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:10px;
-  }
-  .marca{
-    font-family:'Archivo Black',sans-serif;
-    font-size:clamp(28px,5vw,44px);
-    letter-spacing:-0.5px;
-  }
-  .marca span{color:var(--vermelho);}
-  .subtitulo{
-    color:var(--cinza);
-    font-size:14px;
-    max-width:280px;
-    text-align:right;
-  }
+/* ---------- HERO ---------- */
+.hero{padding:54px 0 24px}
+.hero h1{font-size:clamp(4.2rem,17vw,9.5rem);line-height:.85;margin-bottom:14px}
+.hero h1 em{font-style:normal;display:inline-block;background:var(--ink);color:#fff;padding:0 .14em;transform:rotate(-1.5deg)}
+.hero p{font-size:1.2rem;max-width:56ch;margin:0 0 20px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none;margin:0}
+.tags li{border:2px solid var(--ink);background:#fff;border-radius:99px;padding:3px 14px;font-weight:600;font-size:.95rem}
+.tags li.r{background:var(--red);color:#fff;border-color:var(--red)}
 
-  .ticker-wrap{
-    background:var(--vermelho);
-    overflow:hidden;
-    white-space:nowrap;
-    border-bottom:1px solid var(--linha);
-  }
-  .ticker{
-    display:inline-block;
-    padding:9px 0;
-    font-size:13px;
-    font-weight:600;
-    animation:rolar 32s linear infinite;
-  }
-  .ticker b{margin-right:10px;}
-  .ticker em{font-style:normal;opacity:.85;margin-right:40px;}
-  @keyframes rolar{
-    from{transform:translateX(0);}
-    to{transform:translateX(-50%);}
-  }
-  @media (prefers-reduced-motion: reduce){.ticker{animation:none;}}
+/* ---------- JORNADA ---------- */
+.skills{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:6px;padding:18px 18px 16px;box-shadow:5px 5px 0 var(--ink)}
+.card h3{font-size:2rem;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.card h3 small{font:500 .85rem var(--body);color:var(--mute)}
+.card p{margin:8px 0 12px;font-size:.98rem}
+.bar{height:12px;border:2px solid var(--ink);border-radius:99px;overflow:hidden;background:#fff}
+.bar i{display:block;height:100%;width:0;background:var(--red);transition:width .4s}
+.pct{font-size:.85rem;color:var(--mute);margin:4px 0 8px}
+.card label{display:flex;gap:9px;align-items:flex-start;font-size:.95rem;padding:3px 0;cursor:pointer}
+.card input{margin-top:5px;accent-color:var(--red);width:17px;height:17px;flex:none}
+.note{font-size:.88rem;color:var(--mute);margin-top:18px}
 
-  main{max-width:1080px;margin:0 auto;padding:36px 24px 60px;}
+.months{display:grid;gap:0;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border:2px solid var(--ink);background:#fff;margin-top:30px}
+.months div{padding:14px;border-right:2px solid var(--ink)}
+.months div:last-child{border-right:0}
+.months b{font:900 1.5rem var(--disp);display:block}
+.months span{font-size:.9rem;color:var(--mute)}
 
-  .destaque{
-    display:grid;
-    grid-template-columns:1.3fr 1fr;
-    gap:32px;
-    padding-bottom:34px;
-    border-bottom:1px solid var(--linha);
-    margin-bottom:34px;
-  }
-  @media (max-width:760px){.destaque{grid-template-columns:1fr;}}
+/* ---------- JÁ EXPLOREI ---------- */
+.done{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.done .card{box-shadow:none}
+.lvl{display:inline-block;background:var(--ink);color:#fff;border-radius:4px;padding:1px 9px;font-size:.82rem;font-weight:600}
 
-  .tag{
-    display:inline-block;
-    font-size:12px;
-    color:var(--vermelho);
-    font-weight:700;
-    margin-bottom:10px;
-  }
-  .destaque h1{
-    font-family:'Archivo Black',sans-serif;
-    font-size:clamp(26px,4vw,38px);
-    line-height:1.12;
-    margin-bottom:14px;
-  }
-  .destaque p{color:#d8d3c8;font-size:16px;max-width:52ch;}
-  .meta{color:var(--cinza);font-size:13px;margin-top:14px;}
-
-  .lateral{border-left:1px solid var(--linha);padding-left:28px;}
-  @media (max-width:760px){.lateral{border-left:none;padding-left:0;border-top:1px solid var(--linha);padding-top:20px;}}
-  .lateral h2{font-size:14px;color:var(--cinza);font-weight:700;margin-bottom:14px;}
-  .item-lateral{padding:12px 0;border-bottom:1px solid var(--linha);}
-  .item-lateral:last-child{border-bottom:none;}
-  .item-lateral a{font-weight:600;font-size:15px;display:block;margin-bottom:4px;}
-  .item-lateral span{color:var(--cinza);font-size:12px;}
-
-  .secao-titulo{
-    font-family:'Archivo Black',sans-serif;
-    font-size:20px;
-    margin-bottom:20px;
-    padding-bottom:10px;
-    border-bottom:2px solid var(--vermelho);
-    display:inline-block;
-  }
-
-  .grade{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:24px;
-    margin-bottom:44px;
-  }
-  @media (max-width:760px){.grade{grid-template-columns:1fr;}}
-  .cartao h3{font-size:17px;font-weight:700;margin-bottom:8px;line-height:1.3;}
-  .cartao p{color:var(--cinza);font-size:14px;}
-  .cartao .meta{margin-top:8px;}
-
-  .bastidores{
-    background:#1c1815;
-    padding:26px;
-    margin-bottom:44px;
-  }
-  .bastidores ul{list-style:none;}
-  .bastidores li{
-    padding:11px 0;
-    border-bottom:1px solid var(--linha);
-    font-size:15px;
-    display:flex;
-    justify-content:space-between;
-    gap:16px;
-  }
-  .bastidores li:last-child{border-bottom:none;}
-  .bastidores li span{color:var(--cinza);font-size:12px;white-space:nowrap;}
-
-  .proximo-jogo{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    background:var(--vermelho);
-    padding:22px 26px;
-    margin-bottom:44px;
-    flex-wrap:wrap;
-    gap:12px;
-  }
-  .proximo-jogo div:first-child{font-family:'Archivo Black',sans-serif;font-size:19px;}
-  .proximo-jogo div:last-child{font-size:13px;opacity:.9;}
-
-  footer{
-    border-top:1px solid var(--linha);
-    padding:28px 24px;
-    color:var(--cinza);
-    font-size:12px;
-    text-align:center;
-  }
-  footer strong{color:var(--branco);}
+/* ---------- SPFC ---------- */
+#spfc{margin-top:48px;background:var(--ink);color:#fff;padding:56px 0 40px;border-top:10px solid var(--red)}
+#spfc .lead{color:#b9bdc6}
+#spfc .card{background:#1f1e25;border-color:#fff;box-shadow:5px 5px 0 var(--red);color:#fff}
+#spfc .card p,#spfc .card small{color:#c9ccd4}
+.facts{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:34px}
+.facts .card{text-align:center}
+.facts strong{font:900 4rem var(--disp);display:block;line-height:.9;color:#fff}
+.facts span{font-size:.92rem;color:#c9ccd4}
+h3.sub{font-size:2.2rem;margin:38px 0 14px}
+.vids{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.vid{display:block;text-decoration:none;border:2px solid #fff;border-radius:6px;overflow:hidden;background:#1f1e25}
+.vid .thumb{aspect-ratio:16/9;background:repeating-linear-gradient(135deg,var(--red) 0 14px,#a30d23 14px 28px);display:grid;place-items:center;font:900 3.2rem var(--disp)}
+.vid .thumb span{background:#000;padding:0 18px;border-radius:6px}
+.vid .t{padding:12px 14px 14px}
+.vid h4{margin:0 0 4px;font:900 1.5rem var(--disp)}
+.vid p{margin:0;font-size:.9rem;color:#c9ccd4}
+.vid:hover{border-color:var(--red)}
+.vid iframe{width:100%;aspect-ratio:16/9;border:0;display:block}
+.news{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.next{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center;justify-content:space-between}
+.next h3{font-size:2.6rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+td,th{padding:7px 8px;border-bottom:1px solid #4a4a55;text-align:left}
+.tag{color:#ff6b7d;font-weight:600;font-size:.82rem}
+footer{padding:28px 0 40px;font-size:.88rem;color:var(--mute)}
+#spfc+footer{margin-top:0}
+.rd #intro{display:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 
-<div class="faixa"></div>
-
-<header>
-  <div class="masthead">
-    <div class="marca">TRICOLOR<span>EM PAUTA</span></div>
-    <div class="subtitulo">Cobertura diária do São Paulo Futebol Clube — bastidores, elenco e Brasileirão</div>
-  </div>
-</header>
-
-<div class="ticker-wrap">
-  <div class="ticker">
-    <b>ÚLTIMA HORA</b><em>São Paulo negocia com o Novorizontino para evitar bloqueio no registro de novos atletas</em>
-    <b>BASTIDORES</b><em>Presidente do clube e chefe do Conselho marcam reunião</em>
-    <b>ELENCO</b><em>Bobadilla e Lucas Moura avançam em transição física no SuperCT</em>
-    <b>FEMININO</b><em>São Paulo elimina o Flamengo e garante vaga na final do Brasileirão Feminino</em>
-    <b>ÚLTIMA HORA</b><em>São Paulo negocia com o Novorizontino para evitar bloqueio no registro de novos atletas</em>
-    <b>BASTIDORES</b><em>Presidente do clube e chefe do Conselho marcam reunião</em>
-    <b>ELENCO</b><em>Bobadilla e Lucas Moura avançam em transição física no SuperCT</em>
-    <b>FEMININO</b><em>São Paulo elimina o Flamengo e garante vaga na final do Brasileirão Feminino</em>
+<!-- Intro: placa de substituição + vinheta -->
+<div id="intro" role="dialog" aria-label="Entrada no site">
+  <div class="board" id="board">
+    <small>SUBSTITUIÇÃO · MORUMBIS</small>
+    <div class="row out"><b id="nOut">14</b><span>SAI: A ROTINA</span></div>
+    <div class="arrow">▼</div>
+    <div class="row"><b id="nIn">10</b><span>ENTRA: ERICK</span></div>
+    <button id="go" type="button">Entrar em campo</button>
   </div>
 </div>
 
-<main>
-
-  <section class="destaque">
-    <div>
-      <span class="tag">PENDÊNCIA FINANCEIRA</span>
-      <h1>São Paulo corre contra o tempo para evitar transfer ban por dívida com o Novorizontino</h1>
-      <p>O clube tem até a próxima segunda-feira, dia 28, para quitar um débito relacionado à contratação do meia Djhordney e evitar um bloqueio no registro de novos jogadores. A diretoria já encaminhou uma proposta de acordo com o clube do interior para regularizar a pendência ainda nesta temporada.</p>
-      <div class="meta">Bastidores · atualizado nesta semana</div>
-    </div>
-    <div class="lateral">
-      <h2>NO SUPERCT</h2>
-      <div class="item-lateral">
-        <a href="#">Recuperação em dia: Bobadilla e Lucas Moura fazem transição no clube</a>
-        <span>Preparação para o clássico contra o Santos</span>
-      </div>
-      <div class="item-lateral">
-        <a href="#">Aurélio Buta recebe alta após cirurgia no joelho direito</a>
-        <span>Lateral segue em fase de recuperação</span>
-      </div>
-      <div class="item-lateral">
-        <a href="#">Domingos Duarte também é vista no CT após procedimento no joelho</a>
-        <span>Zaga soma desfalques na temporada</span>
-      </div>
-    </div>
-  </section>
-
-  <div class="proximo-jogo">
-    <div>PRÓXIMO CLÁSSICO: SÃO PAULO x SANTOS</div>
-    <div>San-São movimenta a venda de ingressos no MorumBIS — confira detalhes na Fut TV do clube</div>
-  </div>
-
-  <h2 class="secao-titulo">Elenco e departamento de futebol</h2>
-  <div class="grade">
-    <div class="cartao">
-      <h3>Regra dos estrangeiros obriga São Paulo a repensar planejamento</h3>
-      <p>A mudança anunciada pela CBF no número de jogadores estrangeiros relacionados impacta diretamente o planejamento do elenco tricolor para o restante da temporada.</p>
-      <div class="meta">CBF · repercussão no clube</div>
-    </div>
-    <div class="cartao">
-      <h3>Calleri volta a balançar as redes e ganha força na artilharia</h3>
-      <p>Depois de um período sem marcar, o centroavante voltou a decidir em partida no Morumbi, reforçando a briga do time por uma vaga na Libertadores.</p>
-      <div class="meta">Em campo · artilharia 2026</div>
-    </div>
-    <div class="cartao">
-      <h3>Tolói surge como alternativa na zaga em meio a desfalques</h3>
-      <p>Com o departamento médico cheio, o comandante tricolor testa novas soluções defensivas para os próximos compromissos do time.</p>
-      <div class="meta">Escalação · zaga</div>
-    </div>
-  </div>
-
-  <div class="bastidores">
-    <h2 class="secao-titulo" style="border:none;padding:0;margin-bottom:16px;">Direto dos bastidores</h2>
+<header class="top">
+  <nav class="nav" aria-label="Principal">
+    <a class="logo" href="#topo">ERICK</a>
     <ul>
-      <li><a href="#">Djhordney pode ser opção para o clássico após avanço nas negociações com a CBF</a><span>reforço</span></li>
-      <li><a href="#">Volante prioriza recuperação no clube e abre mão de convocação para seleção</a><span>departamento médico</span></li>
-      <li><a href="#">Comissão técnica é criticada por atraso na estreia de jovens da base</a><span>categorias de base</span></li>
-      <li><a href="#">São Paulo participa de projeto conjunto com rival contra a violência nos estádios</a><span>institucional</span></li>
+      <li><a href="#jornada">5 meses</a></li>
+      <li><a href="#explorei">Já explorei</a></li>
+      <li><a href="#spfc">São Paulo FC</a></li>
+      <li><a href="#videos">Vídeos</a></li>
+      <li><a href="#noticias">Notícias</a></li>
+    </ul>
+  </nav>
+  <div class="stripes"></div>
+</header>
+
+<main id="topo">
+<div class="wrap">
+  <div class="hero">
+    <h1>Oi, eu sou o <em>Erick</em></h1>
+    <p>Tenho 14 anos, sou um torcedor apaixonado pelo São Paulo Futebol Clube e estou aprendendo a criar tecnologia com as próprias mãos: circuitos, robôs e código.</p>
+    <ul class="tags">
+      <li class="r">14 anos</li><li class="r">Tricolor de coração</li><li>Eletrônica</li><li>Robótica</li><li>Cultura maker</li>
     </ul>
   </div>
 
-  <h2 class="secao-titulo">Futebol feminino</h2>
-  <div class="grade">
-    <div class="cartao">
-      <h3>Tricolor está na decisão do Brasileirão Feminino</h3>
-      <p>Depois de eliminar o Flamengo na semifinal, o time feminino do São Paulo garantiu vaga na grande final da competição nacional.</p>
-      <div class="meta">Brasileirão Feminino · final confirmada</div>
+  <section id="jornada">
+    <h2>Meus próximos 5 meses</h2>
+    <p class="lead">De outubro de 2026 a fevereiro de 2027, quero conquistar cinco habilidades. Marque cada mini-meta quando concluir: o progresso fica salvo neste navegador.</p>
+    <div class="skills" id="skills"></div>
+    <div class="months" aria-label="Plano mês a mês">
+      <div><b>Outubro</b><span>Pensamento computacional e primeiros circuitos</span></div>
+      <div><b>Novembro</b><span>Eletrônica: LED, botão, sensores</span></div>
+      <div><b>Dezembro</b><span>Cultura maker: projeto do zero</span></div>
+      <div><b>Janeiro</b><span>Robótica: meu primeiro robô</span></div>
+      <div><b>Fevereiro</b><span>Cultura hacker e projeto final</span></div>
     </div>
-    <div class="cartao">
-      <h3>São Paulo e Corinthians decidem o título nacional</h3>
-      <p>As datas do confronto direto entre as duas equipes paulistas pela taça já estão definidas pela organização da competição.</p>
-      <div class="meta">Decisão · Choque-Rei feminino</div>
+  </section>
+
+  <section id="explorei">
+    <h2>O que eu já explorei</h2>
+    <p class="lead">Ainda sou iniciante, mas já comecei a mexer nestas coisas.</p>
+    <div class="done">
+      <div class="card"><h3>Arduino</h3><p>Primeiros contatos com a placa e o jeito de programar componentes.</p><span class="lvl">Iniciante</span></div>
+      <div class="card"><h3>HTML e CSS</h3><p>Criei este site e o portal de notícias do São Paulo.</p><span class="lvl">Iniciante</span></div>
+      <div class="card"><h3>Scratch</h3><p>Lógica de programação com blocos: sequências, laços e decisões.</p><span class="lvl">Iniciante</span></div>
     </div>
-    <div class="cartao">
-      <h3>Base feminina também está em ritmo de decisão</h3>
-      <p>Categorias de base do clube seguem disputando o Campeonato Paulista, com resultados que alimentam o otimismo da torcida.</p>
-      <div class="meta">Categorias de base</div>
-    </div>
+  </section>
+</div>
+
+<!-- ================= SÃO PAULO ================= -->
+<div id="spfc">
+<div class="wrap">
+  <h2>São Paulo Futebol Clube</h2>
+  <p class="lead">Fundado em <strong>25 de janeiro de 1930</strong>. O Tricolor do Morumbis é o clube do meu coração.</p>
+
+  <div class="facts">
+    <div class="card"><strong>1930</strong><span>ano de fundação</span></div>
+    <div class="card"><strong>3</strong><span>Libertadores<br>1992 · 1993 · 2005</span></div>
+    <div class="card"><strong>3</strong><span>Mundiais<br>1992 · 1993 · 2005</span></div>
+    <div class="card"><strong>6</strong><span>Brasileiros<br>1977, 1986, 1991, 2006, 2007, 2008</span></div>
   </div>
 
+  <h3 class="sub" id="videos">Vídeos memoráveis</h3>
+  <div class="vids" id="vids"></div>
+
+  <h3 class="sub" id="noticias">Notícias · atualizado em 7 de outubro de 2026</h3>
+  <div class="card next">
+    <div><small>HOJE · BRASILEIRÃO · 21h30</small><h3>Cruzeiro x São Paulo</h3><p style="margin:4px 0 0">No Mineirão. O Tricolor está em 10º lugar, com 36 pontos em 28 jogos.</p></div>
+  </div>
+
+  <div class="news" style="margin-top:16px">
+    <div class="card"><span class="tag">Calendário</span><h3 style="font-size:1.7rem;margin:4px 0 8px">Próximos jogos</h3>
+      <table><tbody>
+      <tr><td>10/10</td><td>São Paulo x Vitória</td></tr>
+      <tr><td>17/10</td><td>São Paulo x Vasco</td></tr>
+      <tr><td>24/10</td><td>Mirassol x São Paulo</td></tr>
+      <tr><td>28/10</td><td>Bahia x São Paulo</td></tr>
+      <tr><td>04/11</td><td>São Paulo x Corinthians</td></tr>
+      </tbody></table></div>
+    <div class="card"><span class="tag">Em campo</span><h3 style="font-size:1.7rem;margin:4px 0 8px">Calleri decide</h3>
+      <p>Em 19 de setembro, o São Paulo venceu o Internacional por 1 a 0 no Morumbis, com gol de pênalti de Calleri, pela 28ª rodada.</p></div>
+    <div class="card"><span class="tag">Bastidores</span><h3 style="font-size:1.7rem;margin:4px 0 8px">Transfer ban e reforços</h3>
+      <p>O clube pagou a dívida que gerou o bloqueio de registros e anunciou reforços, como o zagueiro Domingos Duarte.</p></div>
+    <div class="card"><span class="tag">Eleições</span><h3 style="font-size:1.7rem;margin:4px 0 8px">Mudança na presidência</h3>
+      <p>Julio Casares deixou os cargos no clube e o cenário eleitoral do Tricolor segue em movimento.</p></div>
+    <div class="card"><span class="tag">Feminino</span><h3 style="font-size:1.7rem;margin:4px 0 8px">Meninas do Tricolor</h3>
+      <p>O time feminino chegou à final do Brasileirão Feminino depois de eliminar o Flamengo. Acompanhe datas e resultados nos canais oficiais.</p></div>
+  </div>
+  <p class="note" style="color:#b9bdc6">Resumo meu a partir de veículos esportivos e do site oficial do clube. Esta página não é o canal oficial do São Paulo FC.</p>
+</div>
+</div>
 </main>
 
-<footer>
-  <p><strong>Tricolor em Pauta</strong> — cobertura independente sobre o São Paulo Futebol Clube.</p>
-  <p>As informações aqui reunidas são um resumo editorial de notícias publicadas por veículos esportivos. Não é o canal oficial do clube.</p>
-  <p>Feito por <strong>Erick</strong>, torcedor tricolor.</p>
-</footer>
+<footer><div class="wrap">Feito por <strong>Erick</strong>, 14 anos, torcedor tricolor e futuro maker. Em construção, como todo bom projeto.</div></footer>
 
+<script>
+/* ---------- Habilidades e mini-metas (edite à vontade) ---------- */
+const SKILLS=[
+ {id:"ele",n:"Eletrônica",d:"Entender como a energia e os componentes funcionam.",g:["Aprender tensão, corrente e resistência","Montar um circuito com LED e resistor","Usar protoboard e multímetro","Ler um sensor com o Arduino"]},
+ {id:"pc",n:"Pensamento computacional",d:"Quebrar problemas grandes em passos pequenos.",g:["Praticar decomposição e padrões","Escrever um algoritmo em fluxograma","Programar uma lógica com laços e condições","Resolver 5 desafios de lógica"]},
+ {id:"rob",n:"Robótica",d:"Unir eletrônica e código para dar movimento a uma ideia.",g:["Controlar um motor com Arduino","Montar o chassi de um robô","Fazer um robô desviar de obstáculos","Apresentar o robô para alguém"]},
+ {id:"hk",n:"Cultura hacker",d:"Curiosidade, ética e compartilhar conhecimento.",g:["Ler sobre a origem da cultura hacker","Entender senhas e segurança digital","Desmontar um aparelho velho para ver como funciona","Compartilhar o que aprendi com um amigo"]},
+ {id:"mk",n:"Cultura maker",d:"Aprender fazendo: prototipar, errar, melhorar e documentar.",g:["Escolher um projeto do zero","Fazer um protótipo com materiais reciclados","Documentar com fotos e anotações","Mostrar o projeto neste site"]}
+];
+let st={};try{st=JSON.parse(localStorage.getItem("erick-skills")||"{}")}catch(e){}
+const box=document.getElementById("skills");
+box.innerHTML=SKILLS.map(s=>`<article class="card"><h3>${s.n}</h3><p>${s.d}</p>
+<div class="bar"><i id="b-${s.id}"></i></div><div class="pct" id="p-${s.id}"></div>
+${s.g.map((t,i)=>`<label><input type="checkbox" data-s="${s.id}" data-i="${i}" ${st[s.id+i]?"checked":""}><span>${t}</span></label>`).join("")}</article>`).join("");
+function upd(){SKILLS.forEach(s=>{const c=s.g.filter((_,i)=>st[s.id+i]).length,p=Math.round(c/s.g.length*100);
+document.getElementById("b-"+s.id).style.width=p+"%";document.getElementById("p-"+s.id).textContent=c+" de "+s.g.length+" metas · "+p+"%"})}
+box.addEventListener("change",e=>{const k=e.target.dataset.s+e.target.dataset.i;st[k]=e.target.checked;
+try{localStorage.setItem("erick-skills",JSON.stringify(st))}catch(_){}upd()});upd();
+
+/* ---------- Vídeos ----------
+ Para trocar o cartão por um vídeo embutido, cole o ID do YouTube em "yt"
+ (a parte depois de v= no link). Sem ID, o cartão abre a busca no YouTube. */
+const VIDS=[
+ {t:"Final da Libertadores 2005",d:"São Paulo 4 x 0 Athletico-PR no Morumbis, o título que levou o Tricolor ao Mundial.",q:"final libertadores 2005 são paulo athletico paranaense",yt:"",n:"2005"},
+ {t:"Mundial 2005",d:"1 a 0 no Liverpool, gol de Mineiro e uma noite gigante de Rogério Ceni.",q:"são paulo x liverpool final mundial 2005",yt:"",n:"1 x 0"},
+ {t:"Mundial 1993",d:"3 a 2 no Milan, em Tóquio: o bicampeonato mundial.",q:"são paulo x milan mundial 1993",yt:"",n:"1993"},
+ {t:"Mundial 1992",d:"2 a 1 no Barcelona, com Raí e Palhinha, o primeiro título mundial.",q:"são paulo x barcelona mundial 1992",yt:"",n:"1992"}
+];
+const vb=document.getElementById("vids");
+vb.innerHTML=VIDS.map(v=>v.yt?
+ `<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${v.yt}" title="${v.t}" loading="lazy" allowfullscreen></iframe><div class="t"><h4>${v.t}</h4><p>${v.d}</p></div></div>`:
+ `<a class="vid" href="https://www.youtube.com/results?search_query=${encodeURIComponent(v.q)}" target="_blank" rel="noopener"><div class="thumb"><span>${v.n}</span></div><div class="t"><h4>${v.t}</h4><p>${v.d} Assistir no YouTube.</p></div></a>`).join("");
+
+/* ---------- Vinheta de entrada ---------- */
+const intro=document.getElementById("intro"),board=document.getElementById("board"),go=document.getElementById("go");
+const AUDIO_SRC=""; // coloque aqui o caminho de um arquivo seu (ex.: "vinheta.mp3") para usar outro som
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let ctx;
+function tone(f,t,d,type="square",v=.12){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;
+g.gain.setValueAtTime(0,ctx.currentTime+t);g.gain.linearRampToValueAtTime(v,ctx.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+d);
+o.connect(g).connect(ctx.destination);o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+d+.05)}
+function jingle(){
+ if(AUDIO_SRC){new Audio(AUDIO_SRC).play().catch(()=>{});return}
+ try{ctx=new (window.AudioContext||window.webkitAudioContext)();
+ [0,.12,.24,.36].forEach((t,i)=>tone([392,494,587,784][i],t,.2));      /* tiquetaqueado da placa */
+ [.7,.7,.7].forEach((t,i)=>tone([523,659,784][i],t,.9,"sawtooth",.08)); /* acorde */
+ tone(1046,1.5,1.2,"triangle",.14)}catch(e){}}
+function enter(){intro.classList.add("gone");setTimeout(()=>intro.remove(),1000)}
+go.addEventListener("click",()=>{
+ board.classList.add("on");jingle();
+ const o=document.getElementById("nOut"),n=document.getElementById("nIn");
+ if(!reduce){o.classList.add("flick");n.classList.add("flick");let i=0;
+  const t=setInterval(()=>{n.textContent=Math.floor(Math.random()*30)+1;if(++i>12){clearInterval(t);n.textContent="10"}},110)}
+ setTimeout(enter,reduce?600:3300)});
+intro.addEventListener("keydown",e=>{if(e.key==="Escape")enter()});
+go.focus();
+</script>
 </body>
 </html>
