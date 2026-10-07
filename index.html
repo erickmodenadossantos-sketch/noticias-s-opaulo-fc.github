@@ -38,6 +38,14 @@ section{padding:56px 0 8px}
 #go{margin-top:26px;font:900 1.6rem var(--disp);letter-spacing:.06em;background:var(--red);color:#fff;border:0;border-radius:8px;padding:12px 28px;cursor:pointer}
 #go:hover{filter:brightness(1.15)}
 .board.on #go{display:none}
+#gol{position:absolute;inset:0;display:none;place-items:center;text-align:center;background:rgba(0,0,0,.72);z-index:3;pointer-events:none;overflow:hidden}
+#gol.on{display:grid}
+#gol div{font:900 clamp(4rem,23vw,13rem)/.85 var(--disp);color:#fff;text-shadow:0 0 30px var(--red),6px 6px 0 var(--red);animation:pop .45s cubic-bezier(.2,2,.4,1),shake .12s .45s infinite}
+#gol small{display:block;font-size:.34em;margin-top:.15em;color:#fff;letter-spacing:.04em}
+.conf{position:absolute;top:-20px;width:10px;height:16px;animation:fall linear forwards}
+@keyframes pop{from{transform:scale(.1) rotate(-12deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@keyframes shake{0%{transform:translate(0,0) rotate(0)}25%{transform:translate(-5px,3px) rotate(-1.2deg)}50%{transform:translate(4px,-4px) rotate(1.2deg)}75%{transform:translate(-3px,-2px) rotate(-.8deg)}100%{transform:translate(3px,3px) rotate(.8deg)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 .flick{animation:fl .12s steps(2) 14}
 @keyframes fl{50%{opacity:.25}}
 
@@ -121,9 +129,10 @@ footer{padding:28px 0 40px;font-size:.88rem;color:var(--mute)}
     <small>SUBSTITUIÇÃO · MORUMBIS</small>
     <div class="row out"><b id="nOut">14</b><span>SAI: A ROTINA</span></div>
     <div class="arrow">▼</div>
-    <div class="row"><b id="nIn">10</b><span>ENTRA: ERICK</span></div>
+    <div class="row"><b id="nIn">10</b><span>ENTRA: CAMISA 10</span></div>
     <button id="go" type="button">Entrar em campo</button>
   </div>
+  <div id="gol" aria-hidden="true"><div>GOOOOOOOL!<small>GOL DO SÃO PAULO!</small></div></div>
 </div>
 
 <header class="top">
@@ -255,25 +264,51 @@ vb.innerHTML=VIDS.map(v=>v.yt?
 
 /* ---------- Vinheta de entrada ---------- */
 const intro=document.getElementById("intro"),board=document.getElementById("board"),go=document.getElementById("go");
-const AUDIO_SRC=""; // coloque aqui o caminho de um arquivo seu (ex.: "vinheta.mp3") para usar outro som
+const AUDIO_SRC="vinheta.mp3"; // coloque na mesma pasta do index.html o arquivo com a vinheta instrumental do hino, com este nome
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let ctx;
 function tone(f,t,d,type="square",v=.12){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;
 g.gain.setValueAtTime(0,ctx.currentTime+t);g.gain.linearRampToValueAtTime(v,ctx.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+t+d);
 o.connect(g).connect(ctx.destination);o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+d+.05)}
-function jingle(){
- if(AUDIO_SRC){new Audio(AUDIO_SRC).play().catch(()=>{});return}
+function synth(){
  try{ctx=new (window.AudioContext||window.webkitAudioContext)();
- [0,.12,.24,.36].forEach((t,i)=>tone([392,494,587,784][i],t,.2));      /* tiquetaqueado da placa */
- [.7,.7,.7].forEach((t,i)=>tone([523,659,784][i],t,.9,"sawtooth",.08)); /* acorde */
+ [0,.12,.24,.36].forEach((t,i)=>tone([392,494,587,784][i],t,.2));
+ [.7,.7,.7].forEach((t,i)=>tone([523,659,784][i],t,.9,"sawtooth",.08));
  tone(1046,1.5,1.2,"triangle",.14)}catch(e){}}
-function enter(){intro.classList.add("gone");setTimeout(()=>intro.remove(),1000)}
+const GOL_SRC="gol.mp3"; // opcional: arquivo seu com a narração de gol, na mesma pasta do index.html
+let falou=false,sons=[],tNar;
+function falarGol(){
+ if(falou)return;falou=true;
+ try{speechSynthesis.cancel();
+ [["Gooooooooooooooool!",1.5,.7],["Gol! Gol! Gol!",1.7,1.1],["Gol do São Paulo!",1.5,.85]].forEach(([t,p,r])=>{
+  const u=new SpeechSynthesisUtterance(t);u.lang="pt-BR";u.pitch=p;u.rate=r;u.volume=1;speechSynthesis.speak(u)})}catch(e){}}
+function festa(){
+ const g=document.getElementById("gol");g.classList.add("on");
+ if(!reduce){const cor=["#d4122e","#fff","#1b1a1f"];
+  for(let i=0;i<70;i++){const c=document.createElement("i");c.className="conf";
+   c.style.left=Math.random()*100+"%";c.style.background=cor[i%3];c.style.animationDuration=(1.6+Math.random()*1.8)+"s";c.style.animationDelay=Math.random()*.8+"s";g.appendChild(c)}}}
+function narrar(){
+ festa();
+ const g=new Audio(GOL_SRC);sons.push(g);g.addEventListener("error",falarGol);g.play().catch(falarGol)}
+function jingle(){
+ tNar=setTimeout(narrar,1100);
+ /* tenta tocar o arquivo da vinheta; se ele não existir, usa o som criado pelo site */
+ const a=new Audio(AUDIO_SRC);sons.push(a);let fell=false;
+ const fb=()=>{if(!fell){fell=true;synth()}};
+ a.addEventListener("error",fb);
+ a.play().catch(fb)}
+function pararTudo(){
+ try{speechSynthesis.cancel()}catch(e){}
+ sons.forEach(a=>{try{a.pause()}catch(e){}});
+ try{ctx&&ctx.close()}catch(e){}}
+function enter(){
+ pararTudo();clearTimeout(tNar);document.getElementById("gol").classList.remove("on");intro.classList.add("gone");setTimeout(()=>intro.remove(),1000)}
 go.addEventListener("click",()=>{
  board.classList.add("on");jingle();
  const o=document.getElementById("nOut"),n=document.getElementById("nIn");
  if(!reduce){o.classList.add("flick");n.classList.add("flick");let i=0;
   const t=setInterval(()=>{n.textContent=Math.floor(Math.random()*30)+1;if(++i>12){clearInterval(t);n.textContent="10"}},110)}
- setTimeout(enter,reduce?600:3300)});
+ setTimeout(enter,reduce?1500:5200)});
 intro.addEventListener("keydown",e=>{if(e.key==="Escape")enter()});
 go.focus();
 </script>
